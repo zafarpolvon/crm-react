@@ -3,7 +3,20 @@ import ReactDOM from 'react-dom';
 import './style/main.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import firebase from 'firebase'
 
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBJ_QFQBulqdHQGNQeqE9mLyDCmVMKSVxY",
+    authDomain: "crm-react-school.firebaseapp.com",
+    databaseURL: "https://crm-react-school.firebaseio.com",
+    projectId: "crm-react-school",
+    storageBucket: "crm-react-school.appspot.com",
+    messagingSenderId: "462386004085",
+    appId: "1:462386004085:web:8c168c3fb949b7d407383c",
+    measurementId: "G-F3EM47B9NX"
+};
+firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>
