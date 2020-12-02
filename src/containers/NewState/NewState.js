@@ -3,6 +3,7 @@ import firebase from "firebase";
 import Input from '../../components/UI/Input/Input'
 import is from 'is_js'
 import axios from 'axios'
+import { NavLink } from 'react-router-dom';
 
 class NewDocument extends Component {
   constructor(props) {
@@ -14,38 +15,44 @@ class NewDocument extends Component {
           value: '',
           type: 'text',
           label: '1. Худуд номи',
-          errorMessage: 'Введите корректный email',
+          errorMessage: 'Худуд номи 5 та харфдан куп булиши керак!',
           valid: false,
           touched: false,
           validation: {
             required: true,
+            minLength: 5
           }
         },
         address: {
           value: '',
           type: 'text',
           label: '2. Манзил',
-          errorMessage: 'Введите корректный пароль',
+          errorMessage: 'Манзил номи 5 та харфдан куп булиши керак!',
           valid: false,
           touched: false,
           validation: {
             required: true,
+            minLength: 5
           }
         },
         number: {
           value: '',
-          type: 'text',
-          label: '3. Телефон номер',
+          type: 'tel',
+          label: '3. Телефон номер +998977654321',
+          errorMessage: 'Телефон ракам +998977654321 булиши керак!',
           valid: false,
           touched: false,
           validation: {
             required: true,
+            minLength: 13,
+            maxLength: 13
           }
         },
         email: {
           value: '',
           type: 'email',
           label: '4. E-mail',
+          errorMessage: 'Хато Email!',
           valid: false,
           touched: false,
           validation: {
@@ -57,25 +64,29 @@ class NewDocument extends Component {
           value: '',
           type: 'text',
           label: '5. Давлат солиқ бошқармаси бошлиғи',
+          errorMessage: '5 та харфдан куп булиши керак!',
           valid: false,
           touched: false,
           validation: {
             required: true,
+            minLength: 5,
           }
         },
         director2: {
           value: '',
           type: 'text',
           label: '6. Бошлиқнинг биринчи ўринбосари',
+          errorMessage: '5 та харфдан куп булиши керак!',
           valid: false,
           touched: false,
           validation: {
             required: true,
+            minLength: 5,
           }
         },
       },
-      downloadURL: null
-      
+      downloadURL: null,
+      showResults: false
     }
   }
   async componentDidMount() {
@@ -95,7 +106,6 @@ class NewDocument extends Component {
     } catch (e) {
       console.log(e)
     }
-
   }   
   onChangeHandler = (event, controlName) => {
     const formControls = { ...this.state.formControls }
@@ -122,17 +132,19 @@ class NewDocument extends Component {
     if (!validation) {
       return true
     }
-
     let isValid = true
-
     if (validation.required) {
       isValid = value.trim() !== '' && isValid
     }
-
     if (validation.email) {
       isValid = is.email(value) && isValid
     }
-
+    if (validation.minLength) {
+      isValid = value.length >= validation.minLength && isValid
+    }
+    if (validation.maxLength) {
+      isValid = value.length <= validation.maxLength && isValid
+    }
     return isValid
   }
   renderInputs() {
@@ -194,6 +206,11 @@ class NewDocument extends Component {
       })
     })
   }
+  check = () => {
+    this.setState({
+      showResults: true
+    })
+  }
   render() {
     console.log(this.state.downloadURL)
     return(
@@ -207,7 +224,16 @@ class NewDocument extends Component {
             <input onChange={this.onFileSelected} type="file" class="w-full h-12 text-gray-700 px-3 py-2 border rounded"></input>
           </div>
           <div className="text-left">
-            <button type="button" class="mt-8 bg-green-500 text-gray-100 rounded hover:bg-green-400 px-6 py-2 w-40 text-xl focus:outline-none" onClick={this.createStateHandler}>Юклаш</button>
+            { this.state.isFormValid ?
+              <NavLink to="/" type="button" class="mt-24 bg-green-500 text-gray-100 rounded hover:bg-green-400 px-6 py-2 w-40 text-xl focus:outline-none" onClick={this.createStateHandler}>Юклаш</NavLink>
+              :<div>
+                {this.state.showResults ?
+                  <p className="-mt-4 mb-4 text-red-600">Поле не должно быть пустым!</p>
+                  : null
+                }
+                <button type="button" class="mt-24 bg-green-500 text-gray-100 rounded hover:bg-green-400 px-6 py-2 w-40 text-xl focus:outline-none" onClick={this.check}>Юклаш</button>
+              </div>
+            }
           </div>
         </div>
       </div>

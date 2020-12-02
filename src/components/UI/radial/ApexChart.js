@@ -5,52 +5,47 @@ class ApexChart extends React.Component {
     super(props)
     this.state = {   
       series: [],
-      all: 0,
-      options: {
-        chart: {
-          height: 350,
-          type: 'radialBar',
-        },
-        plotOptions: {
-          radialBar: {
-            dataLabels: {
-              name: {
-                fontSize: '22px',
+        options: {
+          chart: {
+            width: 400,
+            type: 'pie',
+          },
+          labels: ['Шахсий қабул', 'Ёзма мурожаатлар', 'Электрон мурожаатлар'],
+          responsive: [{
+            breakpoint: 450,
+            options: {
+              chart: {
+                width: 240
               },
-              value: {
-                fontSize: '16px',
-              },
-              total: {
-                show: true,
-                label: 'Барчаси',
-                formatter: function (w) {
-                  // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                  return (Number(props.props.statistic1) + Number(props.props.statistic2) + Number(props.props.statistic3))
-                }
+              legend: {
+                position: 'bottom'
               }
             }
-          }
-        },
-        labels: ['Шахсий қабул', 'Ёзма мурожаатлар', 'Электрон мурожаатлар']
+          }]
+          
       }
     }
   }
   componentWillMount() {
-    const series = [
-      String((Number(this.props.props.statistic1) * 100)/ (Number(this.props.props.statistic1) + Number(this.props.props.statistic2) + Number(this.props.props.statistic3))).slice(0, 2), 
-      String((Number(this.props.props.statistic2) * 100)/ (Number(this.props.props.statistic1) + Number(this.props.props.statistic2) + Number(this.props.props.statistic3))).slice(0, 2), 
-      String((Number(this.props.props.statistic3) * 100)/ (Number(this.props.props.statistic1) + Number(this.props.props.statistic2) + Number(this.props.props.statistic3))).slice(0, 2),
-    ]
+    const series = [(Number(this.props.props.statistic1)), (Number(this.props.props.statistic2)), (Number(this.props.props.statistic3))]
     this.setState({
       series
     })
   }
-  
+  componentWillReceiveProps(nextProps) {
+    const series = [(Number(this.props.props.statistic1)), (Number(this.props.props.statistic2)), (Number(this.props.props.statistic3))]
+    if(this.props.props != nextProps) {
+      this.setState({
+        series
+      })
+    }
+  }
+
   render() {
     return (
       <div>
-        <div id="chart">
-          <ReactApexChart options={this.state.options} series={this.state.series} type="radialBar" height={350} />
+        <div id="chart" className="text-4xl">
+          <ReactApexChart options={this.state.options} series={this.state.series} type="pie" width={450} />
         </div>
       </div>
     )

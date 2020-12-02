@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {NavLink} from 'react-router-dom'
+import firebase from 'firebase'
 
 
 class Navbar extends Component {
@@ -9,14 +10,15 @@ class Navbar extends Component {
       on: false,
     };
   }
-
   toggle = () => {
     this.setState({
       on: !this.state.on,
     })
   }
 
+
   render() {
+    console.log(this.props)
     return (
       <nav className="flex absolute h-full w-auto">
         <div className="flex px-4 py-3 p-0 bg-blue-500">
@@ -30,36 +32,47 @@ class Navbar extends Component {
           </div>
         </div>
           {this.state.on && (
-            <nav style={{width: "320px"}} className="block bg-blue-500 absolute h-full pt-20 z-10 px-4">
-              <NavLink onClick={this.toggle} to="/" className="text-left flex mt-6 border-gray-600">
-                <i class="fas fa-home pr-3 pt-2 text-white text-xl"></i>
-                <h2 className="text-white text-xl font-bold ">Бош сахифа</h2>
-              </NavLink>
-              <NavLink onClick={this.toggle} to="/authcreate" className="text-left flex mt-6">
-                <i class="fas fa-user pr-3 pt-2 text-white text-xl"></i>
-                <h2 className="text-white text-xl font-bold">Регистрация</h2>
-              </NavLink>
-              <NavLink onClick={this.toggle} to="/auth" className="text-left flex mt-6">
-                <i class="fas fa-sign-in-alt pr-3 pt-2 text-white text-xl"></i>
-                <h2 className="text-white text-xl font-bold">Сайтга кириш</h2>
-              </NavLink>
-              <NavLink onClick={this.toggle} to="/Documents" className="text-left flex mt-6">
-                <i class="fas fa-file-word pr-3 pt-2 text-white text-xl"></i>
-                <h2 className="text-white text-xl font-bold">Меъёрий ҳужжатлар</h2>
-              </NavLink>
-              <NavLink onClick={this.toggle} to="/NewState" className="text-left flex mt-6">
-                <i class="fas fa-atlas pr-3 pt-2 text-white text-xl"></i>
-                <h2 className="text-white text-xl font-bold">Ҳудудий органлар</h2>
-              </NavLink>
-              <NavLink onClick={this.toggle} to="/statistics" className="text-left flex mt-6">
-                <i class="fas fa-chart-pie pr-3 pt-2 text-white text-xl"></i>
-                <h2 className="text-white text-xl font-bold">Кўрсаткичлар</h2>
-              </NavLink>
-              <NavLink onClick={this.toggle} to="/settings" className="text-left flex mt-6">
-                <i class="fas fa-cog pr-3 pt-2 text-white text-xl"></i>
-                <h2 className="text-white text-xl font-bold">Созламалар</h2>
-              </NavLink>
-            </nav>
+            <div className="left-0 top-0 bottom-0 right-0 w-full h-full fixed z-10 shadow-lg" onClick={this.toggle}>
+              <nav style={{width: '320px'}} className="block bg-blue-500 absolute h-full pt-20 z-12 px-5">
+                { !this.props.auth ?
+                  <div>
+                    <NavLink onClick={this.toggle} to="/authcreate" className="text-left flex mt-6">
+                      <i class="fas fa-user pr-3 pt-2 text-white text-xl"></i>
+                      <h2 className="text-white text-xl font-bold">Регистрация</h2>
+                    </NavLink>
+                    <NavLink onClick={this.toggle} to="/auth" className="text-left flex mt-6">
+                      <i class="fas fa-sign-in-alt pr-3 pt-2 text-white text-xl"></i>
+                      <h2 className="text-white text-xl font-bold">Сайтга кириш</h2>
+                    </NavLink>
+                  </div>
+                  :
+                  <div>
+                    <NavLink onClick={this.toggle} to="/authcreate" className="text-left flex mt-6">
+                      <i class="fas fa-user pr-3 pt-2 text-white text-xl"></i>
+                      <h2 className="text-white text-xl font-bold">Регистрация</h2>
+                    </NavLink>
+                    <NavLink onClick={this.toggle} to="/" className="text-left flex mt-6 border-gray-600">
+                      <i class="fas fa-home pr-3 pt-2 text-white text-xl"></i>
+                      <h2 className="text-white text-xl font-bold ">Бош сахифа</h2>
+                    </NavLink>    
+                    <NavLink onClick={this.toggle} to="/Documents" className="text-left flex mt-6">
+                      <i class="fas fa-file-word pr-3 pt-2 text-white text-xl"></i>
+                      <h2 className="text-white text-xl font-bold">Меъёрий ҳужжатлар</h2>
+                    </NavLink>
+                    <NavLink onClick={this.toggle} to="/NewState" className="text-left flex mt-6">
+                      <i class="fas fa-atlas pr-3 pt-2 text-white text-xl"></i>
+                      <h2 className="text-white text-xl font-bold">Ҳудудий органлар</h2>
+                    </NavLink>
+                    <NavLink onClick={this.toggle} to="/settings" className="text-left flex mt-6">
+                      <i class="fas fa-cog pr-3 pt-2 text-white text-xl"></i>
+                      <h2 className="text-white text-xl font-bold">Созламалар</h2>
+                    </NavLink>
+                  </div>
+                }
+                
+                
+              </nav>
+            </div>
           )}
       </nav>
     )

@@ -30,22 +30,12 @@ export default class Auth extends Component {
 			const info = (await firebase.database().ref(`/users/info/${uid}`).once('value')).val() || {}
 			this.setState({
 				data: info
-			})
+      })
+      console.log(uid)
 		} catch (e) {
 			console.log(e)
 		}
   }
-  componentDidUpdate = async () => {
-		const uid = this.getUid()
-		try {
-			const info = (await firebase.database().ref(`/users/info/${uid}`).once('value')).val() || {}
-			this.setState({
-				data: info
-			})
-		} catch (e) {
-			console.log(e)
-		}
-	}
 	getUid() {
     const user = firebase.auth().currentUser
     return user ? user.uid : null

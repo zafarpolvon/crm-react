@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import Input from '../../components/UI/Input/Input'
 import is from 'is_js'
 import firebase from 'firebase'
-import { NavLink } from 'react-router-dom'
 
 export default class Auth extends Component {
   constructor(props) {
@@ -144,9 +143,16 @@ export default class Auth extends Component {
       await firebase.database().ref(`/users/info/${uid}`).set({
         name: formData.userName, 
         email: formData.email
-    })
+      })
+      this.setState({
+        hasAccount: true
+      })
+      this.props.history.push('/settings');
     } catch (e) {
       console.log(e)
+      this.setState({
+        isFormValid: false
+      })
     }
 
     console.log(uid)
@@ -154,6 +160,11 @@ export default class Auth extends Component {
   getUid() {
     const user = firebase.auth().currentUser
     return user ? user.uid : null
+  }
+  check = () => {
+    this.setState({
+      showResults: true
+    })
   }
   render() {
     return (
@@ -165,14 +176,28 @@ export default class Auth extends Component {
               {this.renderInputs()}
             </div>
             <div className="text-center">
-              <NavLink
-                to="/auth" 
-                className="bg-blue hover:bg-blue-dark text-white font-bold py-3 bg-green-500 px-8 rounded" 
-                type="button"
-                onClick={this.loginHandler}
-              >
-                Кириш
-              </NavLink>
+              {this.state.isFormValid  ?
+                  <button
+                    className="bg-blue hover:bg-blue-dark text-white font-bold py-3 bg-green-500 px-8 rounded" 
+                    type="button"
+                    onClick={this.loginHandler}
+                  >
+                    Кириш
+                  </button>
+                  :
+                  <div>
+                    {this.state.showResults ?
+                      <p className="-mt-4 mb-4 text-red-600">Поле не должно быть пустым!</p>
+                      : null
+                    }
+                    <button
+                      className="bg-blue hover:bg-blue-dark text-white font-bold py-3 bg-green-500 px-8 rounded"
+                      onClick={this.check}                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                    >
+                      Кириш
+                    </button>
+                  </div>
+                }
             </div>
         </div>
       </div>

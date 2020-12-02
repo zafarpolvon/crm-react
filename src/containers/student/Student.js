@@ -14,6 +14,22 @@ class Student extends Component {
      loading: true
     };
   }
+  async componentDidUpdate(prevProps) {
+    const id = this.props.match.params.id
+    if (id !== prevProps.id) {
+      try {
+        const response = await axios.get(`https://crm-react-school.firebaseio.com/users/states/${this.props.match.params.id}.json`)
+        const student = response.data
+        this.setState({
+          student,
+          loading: false
+        })      
+      } catch(e) {
+        console.log(e)
+      }
+    }
+    
+  }
   async componentDidMount() {
       try {
         const response = await axios.get(`https://crm-react-school.firebaseio.com/users/states/${this.props.match.params.id}.json`)
@@ -22,27 +38,16 @@ class Student extends Component {
           student,
           loading: false
         })
+        console.log(student)
       } catch(e) {
         console.log(e)
       }
   }
-  async componentDidUpdate() {
-    try {
-      const response = await axios.get(`https://crm-react-school.firebaseio.com/users/states/${this.props.match.params.id}.json`)
-      const student = response.data
-      this.setState({
-        student,
-        loading: false
-      })      
-    } catch(e) {
-      console.log(e)
-    }
-    return
-  }
+ 
   render() {
     return (
       <div>
-        <div class="grid grid-cols-12 gap-2 h-screen">
+        <div className="grid grid-cols-12 gap-2 h-screen">
           { this.state.loading?
             <div className="col-span-9 overflow-y-auto h-full bg-gray-100 pl-16 pr-2 pb-8">
               <div className="ml-64 mt-64">
@@ -56,7 +61,7 @@ class Student extends Component {
                 />
               </div>
             </div>
-            :<div class="col-span-9 overflow-y-auto h-full bg-gray-100 pl-16 pr-2 pb-8">
+            : <div class="col-span-9 overflow-y-auto h-full bg-gray-100 pl-16 pr-2 pb-8">
               <div className="grid grid-cols-6 gap-2">
                 <div className="col-span-3 flex pt-8">
                   <div className="block">

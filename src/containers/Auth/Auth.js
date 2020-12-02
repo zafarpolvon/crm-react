@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import Input from '../../components/UI/Input/Input'
 import is from 'is_js'
 import firebase from 'firebase'
-import { NavLink } from 'react-router-dom'
+import { NavLink  } from "react-router-dom";
 
-export default class Auth extends Component {
+
+class Auth extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -35,7 +36,8 @@ export default class Auth extends Component {
           }
         }
       },
-      hasAccount: false
+      showResults: false,
+      
     }
   }
   componentDidMount() {
@@ -54,6 +56,7 @@ export default class Auth extends Component {
 
     let isFormValid = true
 
+
     Object.keys(formControls).forEach(name => {
       isFormValid = formControls[name].valid && isFormValid
     })
@@ -66,21 +69,16 @@ export default class Auth extends Component {
     if (!validation) {
       return true
     }
-
     let isValid = true
-
     if (validation.required) {
       isValid = value.trim() !== '' && isValid
     }
-
     if (validation.email) {
       isValid = is.email(value) && isValid
     }
-
     if (validation.minLength) {
       isValid = value.length >= validation.minLength && isValid
     }
-
     return isValid
   }
   renderInputs() {
@@ -96,7 +94,7 @@ export default class Auth extends Component {
           label={control.label}
           shouldValidate={!!control.validation}
           errorMessage={control.errorMessage}
-          onChange={event => this.onChangeHandler(event, controlName)}
+          onChange={event => this.onChangeHandler(event, controlName)}                                                                                                                                                                                                                                                                                                                                                                                                                                   
         />
       )
     })
@@ -108,37 +106,65 @@ export default class Auth extends Component {
     }
     try {
       await firebase.auth().signInWithEmailAndPassword(formData.email, formData.password)
-      
       this.setState({
         hasAccount: true
       })
+      this.props.history.push('/settings');
     } catch (e) {
       console.log(e)
+      this.setState({
+        isFormValid: false
+      })
     }
-    const user = firebase.auth().currentUser;
-      console.log(user)
+  }
+  check = () => {
+    this.setState({
+      showResults: true
+    })
   }
   render() {
     return (
       <div className="px-24 pt-20">
         <div className="bg-white shadow-2xl rounded pt-6 pb-8 mb-4 flex flex-col px-24 w-3/6 mx-auto">
-          <img className="w-24 mx-auto" src="https://firebasestorage.googleapis.com/v0/b/crm-react-school.appspot.com/o/logo.png?alt=media&token=8cdd2ebe-556a-4bf5-ae56-0c7fcfb61037" />
+          <img alt="" className="w-24 mx-auto" src="https://firebasestorage.googleapis.com/v0/b/crm-react-school.appspot.com/o/logo.png?alt=media&token=8cdd2ebe-556a-4bf5-ae56-0c7fcfb61037" />
           <h2 className="text-center text-gray-800 font-semibold mb-8 text-2xl">Сайтга кириш</h2>
             <div className="mb-4">
               {this.renderInputs()}
             </div>
             <div className="text-center">
-              <NavLink
-                to="/settings"  
-                className="bg-blue hover:bg-blue-dark text-white font-bold py-3 bg-green-500 px-8 rounded" 
-                type="button"
-                onClick={this.loginHandler}
-              >
-                Кириш
-              </NavLink>
+              {this.state.isFormValid  ?
+                <button
+                  className="bg-blue hover:bg-blue-dark text-white font-bold py-3 bg-green-500 px-8 rounded" 
+                  type="button"
+                  onClick={this.loginHandler}
+                >
+                  Кириш
+                </button>
+                :
+                <div>
+                  {this.state.showResults ?
+                    <p className="-mt-4 mb-4 text-red-600">Такого пользователя нет!</p>
+                    : null
+                  }
+                  <button
+                    className="bg-blue hover:bg-blue-dark text-white font-bold py-3 bg-green-500 px-8 rounded"
+                    onClick={this.check}                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                  >
+                    Кириш
+                  </button>
+                </div>
+              }
+              <div>
+                <NavLink to="/authcreate">
+                  <h2 className="mt-4 text-blue-700">Руйхатдан утиш</h2>
+                </NavLink>
+              </div>
             </div>
         </div>
       </div>
     )
   }
 }
+
+
+export default Auth

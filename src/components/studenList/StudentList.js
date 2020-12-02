@@ -32,7 +32,6 @@ class StudentList extends Component {
           id: key
         })
       })
-      console.log(students)
 
       this.setState({
         students,

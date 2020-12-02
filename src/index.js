@@ -4,6 +4,7 @@ import './style/main.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import firebase from 'firebase'
+import { BrowserRouter } from 'react-router-dom';
 
 
 const firebaseConfig = {
@@ -20,7 +21,9 @@ firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
